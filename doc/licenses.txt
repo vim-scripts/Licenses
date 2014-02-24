@@ -2,7 +2,7 @@
 
 Author:         Antoni Boucher <bouanto@gmail.com>
 License:        BSD
-Version:        0.1
+Version:        0.2
 
 This plugin provides commands to insert licenses at the top of the buffer.
 If the license is already at the top of the buffer, nothing is added.

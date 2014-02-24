@@ -30,7 +30,7 @@
 " OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 " Vim plugin to insert licenses.
-" Last Change: 2014 Feb 22
+" Last Change: 2014 Feb 24
 " Maintener: Antoni Boucher <bouanto@gmail.com>
 " License: BSD
 
@@ -41,7 +41,11 @@ let g:loaded_licenses = 1
 
 function! InsertLicense(name)
     " Check if the license is already in the buffer.
-    let licenseFileName = '~/.vim/licenses/' . a:name . '.txt'
+    if has('win32')
+        let licenseFileName = '~/vimfiles/licenses/' . a:name . '.txt'
+    else
+        let licenseFileName = '~/.vim/licenses/' . a:name . '.txt'
+    endif
     if filereadable(expand(licenseFileName))
         let fileContent = readfile(expand(licenseFileName))
 
