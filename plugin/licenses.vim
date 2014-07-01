@@ -24,7 +24,7 @@
 " SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 " Vim plugin to insert licenses.
-" Last Change: 2014 May 19
+" Last Change: 2014 May 31
 " Maintener: Antoni Boucher <bouanto@gmail.com>
 " License: BSD
 
@@ -36,6 +36,25 @@ let g:loaded_licenses = 1
 
 if !exists('g:licenses_authors_name')
     let g:licenses_authors_name = ''
+endif
+
+if !exists('g:licenses_default_commands')
+    let g:licenses_default_commands =
+        \['affero'
+        \, 'apache'
+        \, 'bsd2'
+        \, 'bsd3'
+        \, 'epl'
+        \, 'gfdl'
+        \, 'gpl'
+        \, 'gplv2'
+        \, 'lgpl'
+        \, 'mit'
+        \, 'mpl'
+        \, 'unlicense'
+        \, 'wtfpl'
+        \, 'zlib'
+    \]
 endif
 
 " Default comment delimiters for some languages without proper options
@@ -52,14 +71,12 @@ let s:filetypeCommentDelimiters = {
     \}
 \}
 
+let s:licensesPath = expand('<sfile>:p:h:h') . '/licenses/'
+
 " Insert and comment the provided license.
 function! InsertLicense(name)
     " Check if the license is already in the buffer.
-    if has('win32')
-        let licenseFileName = '~/vimfiles/licenses/' . a:name . '.txt'
-    else
-        let licenseFileName = '~/.vim/licenses/' . a:name . '.txt'
-    endif
+    let licenseFileName = s:licensesPath . a:name . '.txt'
     if filereadable(expand(licenseFileName))
         let fileContent = readfile(expand(licenseFileName))
 
@@ -294,39 +311,8 @@ function! s:substituteAuthorName(firstLine, lastLine)
     endif
 endfunction
 
-" Add a few default commands.
-if !exists(':Affero')
-    command Affero call InsertLicense('affero')
-endif
-
-if !exists(':Apache')
-    command Apache call InsertLicense('apache')
-endif
-
-if !exists(':Bsd2')
-    command Bsd2 call InsertLicense('bsd2')
-endif
-
-if !exists(':Bsd3')
-    command Bsd3 call InsertLicense('bsd3')
-endif
-
-if !exists('Epl')
-    command Epl call InsertLicense('epl')
-endif
-
-if !exists('Gpl')
-    command Gpl call InsertLicense('gpl')
-endif
-
-if !exists('Lgpl')
-    command Lgpl call InsertLicense('lgpl')
-endif
-
-if !exists('Mit')
-    command Mit call InsertLicense('mit')
-endif
-
-if !exists('Mpl')
-    command Mpl call InsertLicense('mpl')
-endif
+" Add a the default commands.
+for s:license in g:licenses_default_commands
+    let s:command = toupper(s:license[0]) . tolower(s:license[1:])
+    execute 'command '. s:command . ' call InsertLicense("' . s:license . '")'
+endfor
